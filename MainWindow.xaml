@@ -1,0 +1,495 @@
+﻿<Window x:Class="SatelliteLinkCalculator.MainWindow"  
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+        xmlns:local="clr-namespace:SatelliteLinkCalculator"  
+        Title="卫星通信系统链路计算软件 V1.0" Height="900" Width="1920" Background="#E2E4E3" WindowStartupLocation="CenterScreen"
+        xmlns:Properties="clr-namespace:SatelliteLinkCalculator.Properties"
+        >
+    <Window.Resources>
+        <local:DoubleConverter x:Key="DoubleConverter"/>
+
+        
+    </Window.Resources>
+    <!--<Viewbox HorizontalAlignment="Left">-->
+    <Grid Margin="10">
+        <!--<Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        
+
+        <!-- Uplink Section -->
+        <GroupBox Header="Uplink" Grid.Column="0" Margin="5" Background="#FFFFFF" BorderBrush="#C0C0C0" BorderThickness="1">
+            <StackPanel Margin="10">
+                <GroupBox Margin="5" Background="#FFFBEEEE" BorderBrush="#C0C0C0" BorderThickness="1">
+                    <StackPanel >
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="上行频率(GHz)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UplinkFrequencyTextBox" Width="100" Margin="5"   
+                                 Text="{Binding UplinkFrequency}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="发射天线口径 (m)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UplinkAntennaDiameterTextBox" Width="100" Margin="5"  ToolTip = "删除输入框数据,计算天线口径" 
+                                 Text="{Binding UplinkAntennaDiameter , Converter={StaticResource DoubleConverter}}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="天线效率 (50%->0.5)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UplinkAntennaEfficiencyTextBox" Width="100" Margin="5"   
+                                 Text="{Binding UplinkAntennaEfficiency}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="发射天线增益 (dBi)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UplinkTransmitGainTextBox" Width="100" Margin="5"   
+                                 Text="{Binding UplinkTransmitGain}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <Button Content="发射天线增益计算" Click="TxAntennaGain_Click" Padding="100,0,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Margin="5" Background="#FFFBEEEE" BorderBrush="#C0C0C0" BorderThickness="1">
+                    <StackPanel >
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="发射天线增益(dBi)" VerticalAlignment="Center"/>
+                            <TextBox  Width="100" Margin="5"   ToolTip = "删除输入框数据,计算发射增益"
+                             Text="{Binding UplinkTransmitGain , Converter={StaticResource DoubleConverter}}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="发射功率(W)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UplinkPowerAtFeedTextBox" Width="100" Margin="5" ToolTip = "删除输入框数据,计算发射功率"  
+                             Text="{Binding UplinkPowerAtFeed , Converter={StaticResource DoubleConverter}}" />
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="发射端馈线损耗Ltf(dB)：" />
+                            <TextBox Width="100" Text="{Binding TxFeedlineLoss}" Margin="5"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="发射天线 EIRP(dBW)" VerticalAlignment="Center" FontWeight="Bold"/>
+                            <TextBox x:Name="UplinkEIRPTextBox" Width="100" Margin="5"   
+                             Text="{Binding UplinkEIRP}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <Button Content="发射天线EIRP计算" Click="TxAntennaEIRP_Click" Padding="100,0,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Margin="5" Background="#FFFBEEEE" BorderBrush="#C0C0C0" BorderThickness="1">
+                    <StackPanel >
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="星地距离 (km)" VerticalAlignment="Center" />
+                            
+                            <TextBox x:Name="UplinkRangeTextBox" Width="100" Margin="5"   
+                                Text="{Binding UplinkRange}"  MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                            <ComboBox x:Name="UplinkRangeComboBox" Width="70" IsEditable="False" HorizontalAlignment="Right" ToolTip="选择地面站到卫星的距离计算方式">
+                                    <ComboBoxItem >
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="粗计算：  " />
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="卫星高度（km）：" />
+                                                <TextBox Width="50" Text="{Binding SatelliteHeight}" />
+                                                <TextBlock Text="地球半径（km）：" />
+                                                <TextBox Width="50" Text="{Binding EarthRadius}" />
+                                                <TextBlock Text="天线仰角（deg）：" />
+                                                <TextBox Width="50" Text="{Binding AntennaElevation}" />
+                                                <TextBlock Text="地心角（deg）：" />
+                                                <TextBox Width="50" Text="{Binding GeocentricAngle}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="精计算(地球同步卫星）：  " />
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="卫星轨位/经度（deg）：" />
+                                                <TextBox Width="50" Text="{Binding OrbitalPosition}" />
+                                                <TextBlock Text="地面站经度（deg）：" />
+                                                <TextBox Width="50" Text="{Binding UpGroundStationLongitude}" />
+                                                <TextBlock Text="地面站纬度（deg）：" />
+                                                <TextBox Width="50" Text="{Binding UpGroundStationLatitude}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+                                </ComboBox>
+                            
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="发射端馈线损耗Ltf(dB)：" />
+                            <TextBox Width="100" Text="{Binding TxFeedlineLoss}" Margin="5"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="上行自由空间损耗(dB)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UplinkPathLossTextBox" Width="100" Margin="5"   
+                             Text="{Binding UplinkPathLoss}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="上行链路其它损耗 (dB)"  VerticalAlignment="Center"/>
+                            <TextBox x:Name="UpOtherLossTextBox" Width="100" Margin="5"    
+                             Text="{Binding UpOtherLoss}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="上行链路总损耗 (dB)" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UpTotalLossTextBox" Width="100" Margin="5"    
+                             Text="{Binding UpTotalLoss}"/>
+                        </StackPanel>
+                        <Button Content="上行损耗计算" Click="UplinkLoss_Click" Padding="100,0,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Margin="5" Background="#FFFBEEEE" BorderBrush="#C0C0C0" BorderThickness="1">
+                    <StackPanel >
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="发射天线 EIRP (dBW)" VerticalAlignment="Center"/>
+                            <TextBox Width="100" Margin="5"   
+                             Text="{Binding UplinkEIRP}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="上行链路噪声带宽 (MHz)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UplinkNoiseBandwidthTextBox" Width="100" Margin="5"   
+                             Text="{Binding UplinkNoiseBandwidth}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="上行租用带宽(MHz)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UplinkBandwidthTextBox" Width="100" Margin="5"   
+                            Text="{Binding UplinkBandwidth}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="地面站饱和EIRP(dBW)" VerticalAlignment="Center" ToolTip="地面站等效全向辐射功率EIRP(dBW)"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,3,0">
+                                <TextBox x:Name="UplinkEIRP2TextBox" Width="100" Margin="5"   
+                                    Text="{Binding UplinkEIRP2}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                                <ComboBox Width="70" IsEditable="False" HorizontalAlignment="Right">
+                                    <ComboBoxItem >
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Name="SFDTextBlock" Text="卫星单载波输入饱和通量密度SFD（dBW/平方米）：" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave"/>
+                                            <TextBox Width="50" Text="{Binding SatelliteSFD}" />
+                                            <TextBlock Text="卫星转发器总带宽（MHz）：" />
+                                            <TextBox Width="50" Text="{Binding TransponderBandwidth}" />
+                                            <TextBlock Text="卫星转发器输入回退IBO（dB）：" />
+                                            <TextBox Width="50" Text="{Binding TransponderInputFallback}" />
+                                            <TextBlock Text="载波回退CBO（dB）："  />
+                                            <TextBox Name="UpCarrierFallbackTextBox" Width="50" Text="{Binding UpCarrierFallback}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                                            <TextBlock Text="载波输入回退CIBO（dB）：" />
+                                            <TextBox Width="50" Text="{Binding CarrierInputFallback }" ToolTip="CIBO = IBO + CBO" Background="#FFE4DCDC"/>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="地面站实际EIRP(dBW)" VerticalAlignment="Center" ToolTip="地面站实际有效全向辐射功率EIRP(dBW)"/>
+                            <TextBox x:Name="UplinkEIRP3TextBox" Width="100" Margin="5"   
+                                Text="{Binding UplinkEIRP3}"/>
+                            <TextBlock Text="{Binding TransponderSaturated}" VerticalAlignment="Center" ToolTip="卫星转发器是否被推饱和"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="卫星接收 G/T (dB/K)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UplinkGTTextBox" Width="100" Margin="5"   
+                             Text="{Binding UplinkGT}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="上行链路载噪比 C/N (dB)" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBox x:Name="UplinkCNTextBox" Width="100" Margin="5" IsReadOnly="True"   
+                             Text="{Binding UplinkCN}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC" />
+                        </StackPanel>
+
+                        <Button Content="上行链路载噪比计算" Click="UpEIRP_CNR_Click" Padding="100,0,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Downlink Section -->
+        <GroupBox Header="Downlink" Grid.Column="1" Margin="5" Background="#FFFFFF" BorderBrush="#C0C0C0" BorderThickness="1">
+            <StackPanel Margin="10">
+                <GroupBox Margin="5" Background="#FFFBEEEE" BorderBrush="#C0C0C0" BorderThickness="1">
+                    <StackPanel >
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="下行频率(GHz)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="DownlinkFrequencyTextBox" Width="100" Margin="5"   
+                             Text="{Binding DownlinkFrequency}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="接收天线口径 (m)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="DownlinkAntennaDiameterTextBox" Width="100" Margin="5"  ToolTip = "删除输入框数据,计算天线口径" 
+                             Text="{Binding DownlinkAntennaDiameter  , Converter={StaticResource DoubleConverter}}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="接收天线效率 (50%->0.5)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="DownlinkAntennaEfficiencyTextBox" Width="100" Margin="5"   
+                             Text="{Binding DownlinkAntennaEfficiency}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="接收天线增益 (dBi)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="DownlinkDeceiveGainTextBox" Width="100" Margin="5"   
+                             Text="{Binding DownlinkReceiveGain}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <Button Content="接收天线增益计算" Click="RxAntennaGain_Click" Padding="100,0,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Margin="5" Background="#FFFBEEEE" BorderBrush="#C0C0C0" BorderThickness="1">
+                    <StackPanel >
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="接收系统等效噪声温度(k)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="DownlinkNoiseTemperatureTextBox" Width="100" Margin="5"   
+                                Text="{Binding DownlinkNoiseTemperature}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+
+                            <ComboBox Width="70" IsEditable="False" HorizontalAlignment="Right">
+                                    <ComboBoxItem >
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="接收天线等效噪声温度Tant(k)：" />
+                                            <TextBox Width="50" Text="{Binding RxAntennaNoiseTemperature}" />
+                                            <TextBlock Text="参考温度T0(k)：" />
+                                            <TextBox Width="50" Text="290" IsEnabled="False" />
+                                            <TextBlock Text="接收端馈线损耗Lrf（dB）：" />
+                                            <TextBox Width="50" Text="{Binding RxFeedlineLoss}" />
+                                            <TextBlock Text="噪声系数（dB）：" />
+                                            <TextBox Width="50" Text="{Binding NoiseFigure}" />
+                                            
+                                        </StackPanel>
+                                    </ComboBoxItem>
+
+                                </ComboBox>
+
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="接收系统品质因素 G/T(dB/K)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="DownlinkGTTextBox" Width="100" Margin="5"   
+                             Text="{Binding DownlinkGT}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+
+                        <Button Content="接收系统品质因素 G/T计算" Click="RxAntennaGT_Click" Padding="60,0,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Margin="5" Background="#FFFBEEEE" BorderBrush="#C0C0C0" BorderThickness="1">
+                    <StackPanel >
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="星地距离(km)" VerticalAlignment="Center"/>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,3,0">
+                                <TextBox x:Name="DownlinkRangeTextBox" Width="100" Margin="5"   
+                                 Text="{Binding DownlinkRange}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                                <ComboBox x:Name="DownlinkRangeComboBox" Width="70" IsEditable="False" HorizontalAlignment="Right" ToolTip="选择地面站到卫星的距离计算方式">
+                                    <ComboBoxItem>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="粗计算：  " />
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="卫星高度（km）：" />
+                                                <TextBox Width="50" Text="{Binding SatelliteHeight}" />
+                                                <TextBlock Text="地球半径（km）：" />
+                                                <TextBox Width="50" Text="{Binding EarthRadius}" />
+                                                <TextBlock Text="天线仰角（deg）：" />
+                                                <TextBox Width="50" Text="{Binding AntennaElevation}" />
+                                                <TextBlock Text="地心角（deg）：" />
+                                                <TextBox Width="50" Text="{Binding GeocentricAngle}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+                                    <ComboBoxItem>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="精计算(地球同步卫星）：  " />
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="卫星轨位/经度（deg）：" />
+                                                <TextBox Width="50" Text="{Binding OrbitalPosition}" />
+                                                <TextBlock Text="地面站经度（deg）：" />
+                                                <TextBox Width="50" Text="{Binding DownGroundStationLongitude}" />
+                                                <TextBlock Text="地面站纬度（deg）：" />
+                                                <TextBox Width="50" Text="{Binding DownGroundStationLatitude}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="接收端馈线损耗Lrf（dB）：" />
+                            <TextBox Width="100" Text="{Binding RxFeedlineLoss}" Margin="5"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="下行自由空间损耗(dB)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="DownlinkPathLossTextBox" Width="100" Margin="5"   
+                             Text="{Binding DownlinkPathLoss}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="下行链路其它损耗 (dB)"  VerticalAlignment="Center"/>
+                            <TextBox x:Name="DownlinkOtherLossTextBox" Width="100" Margin="5"    
+                             Text="{Binding DownlinkOtherLoss}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="下行链路总损耗(dB)" VerticalAlignment="Center" FontWeight="Bold"/>
+                            <TextBox x:Name="DownlinkTotalLossTextBox" Width="100" Margin="5"   
+                                Text="{Binding DownlinkTotalLoss}"  Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <Button Content="下行损耗计算" Click="DownlinkLoss_Click" Padding="120,0,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Margin="5" Background="#FFFBEEEE" BorderBrush="#C0C0C0" BorderThickness="1">
+                    <StackPanel >
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="接收系统品质因素 G/T(dB/K)" VerticalAlignment="Center"/>
+                            <TextBox  Width="100" Margin="5"   
+                             Text="{Binding DownlinkGT}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="卫星饱和EIRP(dBW)"  VerticalAlignment="Center" ToolTip="卫星饱和有效全向辐射功率EIRP(dBW)"/>
+                            <TextBox x:Name="SatelliteEIRPTextBox" Width="100" Margin="5"    
+                             Text="{Binding SatelliteEIRP}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="下行链路噪声带宽 (MHz)"  VerticalAlignment="Center"/>
+                            <TextBox x:Name="DownlinkNoiseBandwidthTextBox" Width="100" Margin="5"    
+                                Text="{Binding DownlinkNoiseBandwidth}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="下行租用带宽(MHz)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="DownlinkBandwidthTextBox" Width="100" Margin="5"   
+                                Text="{Binding DownlinkBandwidth}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="卫星实际EIRP(dBW)" VerticalAlignment="Center" ToolTip="卫星实际有效全向辐射功率EIRP(dBW)"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,3,0">
+                                <TextBox x:Name="DownlinkEIRPTextBox" Width="100" Margin="5"   
+                                    Text="{Binding DownlinkEIRP}" ToolTip="卫星饱和EIRP - COBO"/>
+                                <ComboBox Width="70" IsEditable="False" HorizontalAlignment="Right">
+                                    <ComboBoxItem >
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="卫星单载波输入饱和通量密度SFD（dBW/平方米）：" Visibility="{Binding Show}"/>
+                                            <TextBox Width="50" Text="{Binding SatelliteSFD}" Visibility="{Binding Show}"/>
+                                            <TextBlock Text="卫星转发器输入端饱和功率（dBW）：" Visibility="{Binding Show}"/>
+                                            <TextBox Width="50" Text="{Binding SatelliteInPower}" Visibility="{Binding Show}"/>
+                                            <TextBlock Text="卫星转发器增益（dB）：" Visibility="{Binding Show}"/>
+                                            <TextBox Width="50" Text="{Binding SatelliteGain}" Visibility="{Binding Show}"/>
+                                            <TextBlock Text="卫星转发器总带宽（MHz）：" />
+                                            <TextBox Width="50" Text="{Binding TransponderBandwidth}" />
+                                            <TextBlock Text="卫星转发器输出回退OBO（dB）：" />
+                                            <TextBox Width="50" Text="{Binding TransponderOutputFallback}" />
+                                            <TextBlock Text="载波回退CBO（dB）：" />
+                                            <TextBox Name="DownCarrierFallbackTextBox" Width="50" Text="{Binding DownCarrierFallback}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                                            <TextBlock Text="载波输出回退COBO（dB）：" />
+                                            <TextBox Width="50" Text="{Binding CarrierOutputFallback }" ToolTip="COBO = OBO + CBO" Background="#FFE4DCDC"/>
+                                        </StackPanel>
+                                    </ComboBoxItem>
+
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="下行链路载噪比 C/N (dB)" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBox x:Name="DownlinkCNTextBox" Width="100" Margin="5"    
+                             Text="{Binding DownlinkCN}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+
+                        </StackPanel>
+                        <Button Content="下行链路载噪比计算" Click="DownEIRP_CNR_Click" Padding="80,0,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </GroupBox>
+
+        <!-- Total Link Section -->
+        <GroupBox Header="Total Link" Grid.Column="2" Margin="5" Background="#FFFFFF" BorderBrush="#C0C0C0" BorderThickness="1">
+            <StackPanel Margin="10">
+                <GroupBox Margin="5" Background="#FFFBEEEE" BorderBrush="#C0C0C0" BorderThickness="1">
+                    <StackPanel >
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="上行链路载噪比 C/N(dB)"  VerticalAlignment="Center"/>
+                            <TextBox  Width="100" Margin="5"    
+                             Text="{Binding UplinkCN}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="下行链路载噪比 C/N(dB)"  VerticalAlignment="Center"/>
+                            <TextBox  Width="100" Margin="5"   
+                             Text="{Binding DownlinkCN}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="总载噪比 C/N (dB)" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBox x:Name="TotalCNTextBox" Width="100" Margin="5"    
+                             Text="{Binding TotalCN}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="链路门限CNR (dB)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="ThresholdCNRTextBox" Width="100" Margin="5"    
+                             Text="{Binding ThresholdCNR}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="链路余量CNR (dB)" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBox x:Name="MarginCNRTextBox" Width="100" Margin="5" IsReadOnly="True"   
+                             Text="{Binding MarginCNR}" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <Button Content="总载噪比计算" Click="TotalCNR_Click" Padding="120,0,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Margin="5" Background="#FFFBEEEE" BorderBrush="#C0C0C0" BorderThickness="1">
+                    <StackPanel >
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="下行租用带宽(MHz)" VerticalAlignment="Center"/>
+                            <TextBox Width="100" Margin="5"   
+                                Text="{Binding DownlinkBandwidth}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="滚降因子(0 - 1)" VerticalAlignment="Center"/>
+                            <TextBox  Width="100" Margin="5"    
+                                Text="{Binding RollOff}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="符号速率(Msps)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="SymbolRateTextBox" Width="100" Margin="5"    
+                                Text="{Binding SymbolRate}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="编码率" VerticalAlignment="Center"/>
+                            <TextBox  Width="100" Margin="5"   
+                                Text="{Binding Rate}"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="调制阶数" VerticalAlignment="Center"/>
+                            <TextBox x:Name="ModulationOrderTextBox" Width="100" Margin="5"   
+                                Text="{Binding ModulationOrder}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" />
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="信息速率/比特率(Mbps)" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBox x:Name="InformationRateTextBox" Width="100" Margin="5" ToolTip="有效数据"   
+                                Text="{Binding InformationRate}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <!--<StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="信息速率/比特率（dB）" VerticalAlignment="Center"/>
+                            <TextBox x:Name="BitRateTextBox" Width="100" Margin="5"    
+                                Text="{Binding BitRate}"/>
+                        </StackPanel>-->
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="Eb/N0(dB)" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <TextBox x:Name="EbN0TextBox" Width="100" Margin="5" IsReadOnly="True"   ToolTip="SNR等于载噪比CNR"
+                                Text="{Binding EbN0}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="解调门限Eb/N0(dB)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="ThresholdEbN0TextBox" Width="100" Margin="5" IsReadOnly="True"   
+                                Text="{Binding ThresholdEbN0}" />
+                        </StackPanel>
+                        <StackPanel  Margin="2" Orientation="Horizontal" >
+                            <TextBlock Text="链路余量Eb/N0(dB)" VerticalAlignment="Center"/>
+                            <TextBox x:Name="MarginEbN0TextBox" Width="100" Margin="5"    
+                             Text="{Binding MarginEbN0}" Background="#FFE4DCDC"/>
+                        </StackPanel>
+                        <Button Content="链路余量计算" Click="TotalEbN0_Click" Padding="120,0,0,0"/>
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </GroupBox>
+
+        <Viewbox Grid.Column="3" >
+            <Image Name="HoverImage"  Visibility="Hidden" HorizontalAlignment="Left" />
+        </Viewbox>
+    </Grid>
+    <!--</Viewbox>-->
+</Window>  
